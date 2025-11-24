@@ -1,0 +1,14 @@
+.git
+venv
+.venv
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.log
+.env
+.env.*
+navigator.db
+server.log
+uvicorn.log
+README.md~

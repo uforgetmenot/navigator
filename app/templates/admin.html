@@ -4,16 +4,15 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>管理后台</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <script src="/static/vendor/tailwindcss.js"></script>
+    <link href="/static/css/fonts.css" rel="stylesheet"/>
+    <script src="/static/vendor/vue.js"></script>
     <style>
         body { font-family: 'Inter', sans-serif; }
         .material-symbols-outlined { vertical-align: middle; }
     </style>
 </head>
-<body class="bg-gray-100 h-screen flex flex-col">
+<body class="bg-gray-100 h-screen flex flex-col" data-initial-admin="{{ initial_admin }}">
 {% raw %}
     <div id="admin-app" class="flex-1 flex flex-col h-full" v-cloak>
         
@@ -48,6 +47,16 @@
                         :class="{'bg-blue-50 text-blue-700': currentView === 'cards', 'text-gray-600 hover:bg-gray-50': currentView !== 'cards'}"
                         class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md">
                         <span class="material-symbols-outlined mr-3">grid_view</span> 卡片管理
+                    </button>
+                    <button @click="currentView = 'users'" 
+                        :class="{'bg-blue-50 text-blue-700': currentView === 'users', 'text-gray-600 hover:bg-gray-50': currentView !== 'users'}"
+                        class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <span class="material-symbols-outlined mr-3">group</span> 用户管理
+                    </button>
+                    <button @click="currentView = 'settings'" 
+                        :class="{'bg-blue-50 text-blue-700': currentView === 'settings', 'text-gray-600 hover:bg-gray-50': currentView !== 'settings'}"
+                        class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <span class="material-symbols-outlined mr-3">tune</span> 搜索配置
                     </button>
                 </nav>
             </aside>
@@ -112,6 +121,97 @@
                             </div>
                             <p class="text-xs text-gray-500 mb-1">{{ getCategoryName(card.category_id) }}</p>
                             <p class="text-xs text-gray-600 line-clamp-2">{{ card.description }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Users View -->
+                <div v-if="currentView === 'users'">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-lg font-medium text-gray-900">用户列表</h2>
+                        <button @click="openModal('user')" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center">
+                            <span class="material-symbols-outlined mr-1">person_add</span> 新增用户
+                        </button>
+                    </div>
+                    <div class="bg-white shadow overflow-hidden sm:rounded-md">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">用户名</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">角色</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状态</th>
+                                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200" v-if="users.length">
+                                <tr v-for="user in users" :key="user.id">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ user.username }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <span :class="user.is_superuser ? 'text-blue-600' : 'text-gray-600'">
+                                            {{ user.is_superuser ? '管理员' : '普通用户' }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                        <span :class="user.is_active ? 'text-green-600' : 'text-red-600'">
+                                            {{ user.is_active ? '启用' : '禁用' }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-right space-x-2">
+                                        <button @click="editUser(user)" class="text-blue-600 hover:text-blue-900">编辑</button>
+                                        <button @click="deleteUser(user.id)" class="text-red-600 hover:text-red-900">删除</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody v-else>
+                                <tr>
+                                    <td colspan="4" class="px-6 py-4 text-center text-sm text-gray-500">暂无用户</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Settings View -->
+                <div v-if="currentView === 'settings'">
+                    <div class="max-w-3xl bg-white shadow rounded-lg p-6 space-y-10">
+                        <div>
+                            <h2 class="text-lg font-medium text-gray-900 mb-4">品牌信息</h2>
+                            <p class="text-sm text-gray-500 mb-6">配置侧边栏展示的站点名称与图标，图标使用 <a href="https://fonts.google.com/icons" target="_blank" class="text-blue-600 hover:underline">Material Symbols</a> 名称。</p>
+                            <form class="space-y-5" @submit.prevent="saveBrandingConfig">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">站点名称</label>
+                                    <input v-model="brandingConfig.title" type="text" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">图标</label>
+                                    <input v-model="brandingConfig.icon" type="text" placeholder="hub" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                                </div>
+                                <div class="flex justify-end">
+                                    <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">保存品牌配置</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div>
+                            <h2 class="text-lg font-medium text-gray-900 mb-4">搜索配置</h2>
+                            <p class="text-sm text-gray-500 mb-6">可自定义首页搜索框的提示语与搜索引擎。URL 模板中请使用 <code>{query}</code> 作为搜索关键字占位符。</p>
+                            <form class="space-y-5" @submit.prevent="saveSearchConfig">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">搜索提示语</label>
+                                    <input v-model="searchConfig.placeholder" type="text" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">搜索引擎名称</label>
+                                    <input v-model="searchConfig.engine_name" type="text" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">搜索 URL 模板</label>
+                                    <input v-model="searchConfig.engine_url" type="text" required placeholder="https://www.google.com/search?q={query}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                                </div>
+                                <div class="flex justify-end">
+                                    <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">保存搜索配置</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -205,6 +305,33 @@
                         </div>
                     </form>
 
+                    <!-- User Form -->
+                    <form v-if="modalType === 'user'" @submit.prevent="saveUser">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">用户名</label>
+                                <input v-model="formUser.username" type="text" required :disabled="isEditing && isDefaultAdmin" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm disabled:bg-gray-100 disabled:cursor-not-allowed">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">密码</label>
+                                <input v-model="formUser.password" :placeholder="isEditing ? '留空则不修改' : ''" :required="!isEditing" type="password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                            </div>
+                            <div class="flex items-center">
+                                <input v-model="formUser.is_superuser" type="checkbox" :disabled="isEditing && isDefaultAdmin" class="h-4 w-4 text-blue-600 border-gray-300 rounded disabled:opacity-60 disabled:cursor-not-allowed">
+                                <label class="ml-2 block text-sm text-gray-900">管理员</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input v-model="formUser.is_active" type="checkbox" :disabled="isEditing && isDefaultAdmin" class="h-4 w-4 text-blue-600 border-gray-300 rounded disabled:opacity-60 disabled:cursor-not-allowed">
+                                <label class="ml-2 block text-sm text-gray-900">启用</label>
+                            </div>
+                            <p v-if="isEditing && isDefaultAdmin" class="text-xs text-gray-500">默认管理员只能修改密码</p>
+                        </div>
+                        <div class="mt-5 sm:mt-6 flex justify-end space-x-2">
+                            <button type="button" @click="closeModal" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50">取消</button>
+                            <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">保存</button>
+                        </div>
+                    </form>
+
                 </div>
             </div>
         </div>
@@ -217,26 +344,38 @@
                 currentView: 'categories',
                 categories: [],
                 cards: [],
+                users: [],
                 filterCategoryId: null,
                 showModal: false,
-                modalType: '', // 'category' or 'card'
+                modalType: '', // 'category' | 'card' | 'user'
                 isEditing: false,
                 formCategory: { id: null, slug: '', label: '', icon: '', order: 0, active: false },
-                formCard: { id: null, category_id: null, title: '', subtitle: '', description: '', icon: '', icon_bg_class: 'bg-blue-100', icon_color_class: 'text-blue-500', href: '', order: 0 }
+                formCard: { id: null, category_id: null, title: '', subtitle: '', description: '', icon: '', icon_bg_class: 'bg-blue-100', icon_color_class: 'text-blue-500', href: '', order: 0 },
+                formUser: { id: null, username: '', password: '', is_superuser: false, is_active: true },
+                searchConfig: { placeholder: '', engine_name: '', engine_url: '' },
+                brandingConfig: { title: '', icon: '' },
+                initialAdmin: document.body.dataset.initialAdmin || ''
             },
             computed: {
                 modalTitle() {
-                    return (this.isEditing ? '编辑' : '新增') + (this.modalType === 'category' ? '分类' : '卡片');
+                    const labels = { category: '分类', card: '卡片', user: '用户' };
+                    return (this.isEditing ? '编辑' : '新增') + (labels[this.modalType] || '');
                 },
                 filteredCards() {
                     if (!this.filterCategoryId) return this.cards;
                     return this.cards.filter(c => c.category_id === this.filterCategoryId);
+                },
+                isDefaultAdmin() {
+                    return this.formUser && this.formUser.username === this.initialAdmin;
                 }
             },
             async created() {
                 this.checkAuth();
                 await this.fetchCategories();
                 await this.fetchCards();
+                await this.fetchUsers();
+                await this.fetchSearchConfig();
+                await this.fetchBrandingConfig();
             },
             methods: {
                 getHeaders() {
@@ -265,6 +404,21 @@
                     const res = await fetch('/api/cards/', { headers: this.getHeaders() });
                     if (res.ok) this.cards = await res.json();
                 },
+                async fetchUsers() {
+                    const res = await fetch('/api/users/', { headers: this.getHeaders() });
+                    if (res.ok) this.users = await res.json();
+                    else if (res.status === 401) this.logout();
+                },
+                async fetchSearchConfig() {
+                    const res = await fetch('/api/configs/search', { headers: this.getHeaders() });
+                    if (res.ok) this.searchConfig = await res.json();
+                    else if (res.status === 401) this.logout();
+                },
+                async fetchBrandingConfig() {
+                    const res = await fetch('/api/configs/branding', { headers: this.getHeaders() });
+                    if (res.ok) this.brandingConfig = await res.json();
+                    else if (res.status === 401) this.logout();
+                },
                 getCategoryName(id) {
                     const cat = this.categories.find(c => c.id === id);
                     return cat ? cat.label : 'Unknown';
@@ -275,8 +429,10 @@
                     this.showModal = true;
                     if (type === 'category') {
                         this.formCategory = { id: null, slug: '', label: '', icon: '', order: this.categories.length, active: false };
-                    } else {
+                    } else if (type === 'card') {
                         this.formCard = { id: null, category_id: this.categories[0]?.id, title: '', subtitle: '', description: '', icon: 'link', icon_bg_class: 'bg-blue-100', icon_color_class: 'text-blue-500', href: '', order: 0 };
+                    } else if (type === 'user') {
+                        this.formUser = { id: null, username: '', password: '', is_superuser: false, is_active: true };
                     }
                 },
                 editCategory(category) {
@@ -289,6 +445,12 @@
                     this.modalType = 'card';
                     this.isEditing = true;
                     this.formCard = { ...card };
+                    this.showModal = true;
+                },
+                editUser(user) {
+                    this.modalType = 'user';
+                    this.isEditing = true;
+                    this.formUser = { ...user, password: '' };
                     this.showModal = true;
                 },
                 closeModal() {
@@ -328,6 +490,30 @@
                         alert('保存失败');
                     }
                 },
+                async saveUser() {
+                    const method = this.isEditing ? 'PUT' : 'POST';
+                    const url = this.isEditing ? `/api/users/${this.formUser.id}` : '/api/users/';
+                    const payload = { ...this.formUser };
+                    if (!payload.password) delete payload.password;
+                    if (this.isEditing && this.isDefaultAdmin) {
+                        delete payload.username;
+                        delete payload.is_superuser;
+                        delete payload.is_active;
+                    }
+
+                    const res = await fetch(url, {
+                        method: method,
+                        headers: this.getHeaders(),
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (res.ok) {
+                        await this.fetchUsers();
+                        this.closeModal();
+                    } else {
+                        alert('保存失败');
+                    }
+                },
                 async deleteCategory(id) {
                     if (!confirm('确认删除该分类吗？')) return;
                     const res = await fetch(`/api/categories/${id}`, { method: 'DELETE', headers: this.getHeaders() });
@@ -337,6 +523,37 @@
                     if (!confirm('确认删除该卡片吗？')) return;
                     const res = await fetch(`/api/cards/${id}`, { method: 'DELETE', headers: this.getHeaders() });
                     if (res.ok) this.fetchCards();
+                },
+                async deleteUser(id) {
+                    if (!confirm('确认删除该用户吗？')) return;
+                    const res = await fetch(`/api/users/${id}`, { method: 'DELETE', headers: this.getHeaders() });
+                    if (res.ok) this.fetchUsers();
+                },
+                async saveSearchConfig() {
+                    const res = await fetch('/api/configs/search', {
+                        method: 'PUT',
+                        headers: this.getHeaders(),
+                        body: JSON.stringify(this.searchConfig)
+                    });
+                    if (res.ok) {
+                        this.searchConfig = await res.json();
+                        alert('保存成功');
+                    } else {
+                        alert('保存失败');
+                    }
+                },
+                async saveBrandingConfig() {
+                    const res = await fetch('/api/configs/branding', {
+                        method: 'PUT',
+                        headers: this.getHeaders(),
+                        body: JSON.stringify(this.brandingConfig)
+                    });
+                    if (res.ok) {
+                        this.brandingConfig = await res.json();
+                        alert('保存成功');
+                    } else {
+                        alert('保存失败');
+                    }
                 }
             }
         });

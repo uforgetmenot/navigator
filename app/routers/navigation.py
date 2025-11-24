@@ -2,8 +2,19 @@ from fastapi import APIRouter, Depends
 from sqlmodel import Session, select
 from app.database import get_session
 from app.models import Category, NavigationCard, SiteConfig
+from app.config import get_settings
 
 router = APIRouter()
+settings = get_settings()
+
+
+def _ensure_query_placeholder(url: str) -> str:
+    if not url:
+        return "https://www.google.com/search?q={query}"
+    if "{query}" in url:
+        return url
+    separator = "&" if "?" in url else "?"
+    return f"{url}{separator}q={{query}}"
 
 @router.get("/navigation")
 def get_navigation_data(session: Session = Depends(get_session)):
@@ -65,7 +76,7 @@ def get_navigation_data(session: Session = Depends(get_session)):
                 "indicator": {
                     "icon": "circle",
                     "colorClass": "text-green-500",
-                    "text": "API 状态: 正常",
+                    "text": "状态: 正常",
                     "tooltip": "所有系统运行正常"
                 },
                 "refresh": {
@@ -83,7 +94,13 @@ def get_navigation_data(session: Session = Depends(get_session)):
             ]
         },
         "hero": {
-            "searchPlaceholder": config_dict.get("hero_search_placeholder", "搜索工具、资源...")
+            "searchPlaceholder": config_dict.get("hero_search_placeholder", "搜索工具、资源..."),
+            "searchEngine": {
+                "name": config_dict.get("search_engine_name", "Google"),
+                "url": _ensure_query_placeholder(
+                    config_dict.get("search_engine_url", settings.GOOGLE_SEARCH_URL)
+                )
+            }
         },
         "sections": sections
     }

@@ -11,6 +11,8 @@ class Settings(BaseSettings):
     API_HOST: str = "0.0.0.0"
     API_PORT: int = 8000
     GOOGLE_SEARCH_URL: str = "https://www.google.com/search"
+    INITIAL_ADMIN_USERNAME: str = "admin"
+    INITIAL_ADMIN_PASSWORD: str = "admin123"
 
     class Config:
         env_file = ".env"

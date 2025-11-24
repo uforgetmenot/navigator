@@ -3,6 +3,10 @@ import os
 from sqlmodel import Session, select
 from app.database import engine, create_db_and_tables
 from app.models import Category, NavigationCard, SiteConfig, User
+from app.config import get_settings
+from app.core.security import get_password_hash
+
+settings = get_settings()
 
 def load_json_data(file_path):
     with open(file_path, 'r', encoding='utf-8') as f:
@@ -79,21 +83,25 @@ def seed_data():
         hero = data.get("hero", {})
         if hero:
             session.add(SiteConfig(key="hero_search_placeholder", value=hero.get("searchPlaceholder", "Search...")))
+        # Default search engine config
+        session.add(SiteConfig(key="search_engine_name", value="Google"))
+        session.add(SiteConfig(key="search_engine_url", value="https://www.google.com/search?q={query}"))
 
         session.commit()
         
         # 4. Seed Admin User
-        existing_user = session.exec(select(User).where(User.username == "admin")).first()
+        admin_username = settings.INITIAL_ADMIN_USERNAME
+        admin_password = settings.INITIAL_ADMIN_PASSWORD
+        existing_user = session.exec(select(User).where(User.username == admin_username)).first()
         if not existing_user:
-            from app.core.security import get_password_hash
             admin_user = User(
-                username="admin",
-                hashed_password=get_password_hash("admin123"),
+                username=admin_username,
+                hashed_password=get_password_hash(admin_password),
                 is_superuser=True
             )
             session.add(admin_user)
             session.commit()
-            print("Created admin user: admin / admin123")
+            print(f"Created admin user: {admin_username} / {admin_password}")
         
         print("Seeding complete.")
 

@@ -56,6 +56,22 @@ python app/services/seed.py
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
+### 2.1 Docker 部署
+
+项目内已提供 `Dockerfile` 和 `docker-compose.yml`，可以通过容器方式快速启动：
+
+```bash
+# 首次构建镜像并启动服务
+docker compose up --build
+
+# 后续再次启动
+docker compose up
+```
+
+默认会暴露 `8000` 端口到宿主机，并将 SQLite 数据库存储在名为 `navigator_data` 的卷中（挂载到容器 `/app/data`）。
+
+> 提示：如果需要自定义环境变量（例如 `SECRET_KEY` 或 `DATABASE_URL`），可以在项目根目录创建 `.env` 文件，或者直接在 `docker-compose.yml` 中的 `environment` 块覆盖。
+
 ### 3. 访问应用
 
 启动成功后，打开浏览器访问：

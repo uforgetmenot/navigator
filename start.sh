@@ -19,7 +19,7 @@ if [ ! -d "venv" ]; then
     
     echo -e "${BLUE}[INFO] 正在安装依赖...${NC}"
     ./venv/bin/pip install --upgrade pip
-    ./venv/bin/pip install fastapi uvicorn sqlmodel jinja2 python-dotenv requests pydantic-settings
+    ./venv/bin/pip install fastapi uvicorn sqlmodel jinja2 python-dotenv requests pydantic-settings python-jose passlib[bcrypt] bcrypt python-multipart
     if [ $? -ne 0 ]; then
         echo "依赖安装失败。"
         exit 1

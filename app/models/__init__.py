@@ -6,7 +6,7 @@ from .card import (
     NavigationCardUpdate,
 )
 from .config import SiteConfig
-from .user import User
+from .user import User, UserCreate, UserRead, UserUpdate
 
 __all__ = [
     "Category",
@@ -16,4 +16,7 @@ __all__ = [
     "NavigationCardUpdate",
     "SiteConfig",
     "User",
+    "UserCreate",
+    "UserRead",
+    "UserUpdate",
 ]
