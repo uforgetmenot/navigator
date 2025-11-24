@@ -1,19 +1,39 @@
-from fastapi import FastAPI, Request
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse
 from contextlib import asynccontextmanager
 
-from app.database import create_db_and_tables
-from app.routers import navigation, status, auth, categories, cards, users, configs
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from sqlmodel import Session, select
+
 from app.config import get_settings
+from app.core.security import get_password_hash
+from app.database import create_db_and_tables, engine
+from app.models import User
+from app.routers import navigation, status, auth, categories, cards, users, configs
 
 settings = get_settings()
+
+
+def ensure_default_admin():
+    with Session(engine) as session:
+        username = settings.INITIAL_ADMIN_USERNAME
+        user = session.exec(select(User).where(User.username == username)).first()
+        if not user:
+            admin_user = User(
+                username=username,
+                hashed_password=get_password_hash(settings.INITIAL_ADMIN_PASSWORD),
+                is_superuser=True,
+                is_active=True,
+            )
+            session.add(admin_user)
+            session.commit()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup
     create_db_and_tables()
+    ensure_default_admin()
     # Optional: Run seed here if we wanted, but better to use CLI command
     yield
     # Shutdown

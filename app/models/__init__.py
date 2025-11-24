@@ -1,4 +1,9 @@
-from .category import Category
+from .category import (
+    Category,
+    CategoryCreate,
+    CategoryRead,
+    CategoryUpdate,
+)
 from .card import (
     NavigationCard,
     NavigationCardCreate,
@@ -10,6 +15,9 @@ from .user import User, UserCreate, UserRead, UserUpdate
 
 __all__ = [
     "Category",
+    "CategoryCreate",
+    "CategoryRead",
+    "CategoryUpdate",
     "NavigationCard",
     "NavigationCardCreate",
     "NavigationCardRead",
