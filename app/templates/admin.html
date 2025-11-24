@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>管理后台</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { vertical-align: middle; }
+    </style>
+</head>
+<body class="bg-gray-100 h-screen flex flex-col">
+{% raw %}
+    <div id="admin-app" class="flex-1 flex flex-col h-full" v-cloak>
+        
+        <!-- Header -->
+        <header class="bg-white shadow z-10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
+                <div class="flex items-center">
+                    <span class="material-symbols-outlined text-blue-600 text-3xl mr-2">admin_panel_settings</span>
+                    <h1 class="text-xl font-bold text-gray-900">管理后台</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/" class="text-gray-500 hover:text-gray-700 flex items-center">
+                        <span class="material-symbols-outlined mr-1">home</span> 返回主页
+                    </a>
+                    <button @click="logout" class="text-red-600 hover:text-red-800 flex items-center">
+                        <span class="material-symbols-outlined mr-1">logout</span> 退出
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex flex-1 overflow-hidden">
+            <!-- Sidebar -->
+            <aside class="w-64 bg-white border-r border-gray-200 overflow-y-auto">
+                <nav class="p-4 space-y-2">
+                    <button @click="currentView = 'categories'" 
+                        :class="{'bg-blue-50 text-blue-700': currentView === 'categories', 'text-gray-600 hover:bg-gray-50': currentView !== 'categories'}"
+                        class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <span class="material-symbols-outlined mr-3">category</span> 分类管理
+                    </button>
+                    <button @click="currentView = 'cards'" 
+                        :class="{'bg-blue-50 text-blue-700': currentView === 'cards', 'text-gray-600 hover:bg-gray-50': currentView !== 'cards'}"
+                        class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                        <span class="material-symbols-outlined mr-3">grid_view</span> 卡片管理
+                    </button>
+                </nav>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="flex-1 overflow-y-auto p-8">
+                
+                <!-- Categories View -->
+                <div v-if="currentView === 'categories'">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-lg font-medium text-gray-900">分类列表</h2>
+                        <button @click="openModal('category')" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center">
+                            <span class="material-symbols-outlined mr-1">add</span> 新增分类
+                        </button>
+                    </div>
+                    <div class="bg-white shadow overflow-hidden sm:rounded-md">
+                        <ul class="divide-y divide-gray-200">
+                            <li v-for="category in categories" :key="category.id" class="px-4 py-4 flex items-center justify-between hover:bg-gray-50">
+                                <div class="flex items-center">
+                                    <span class="material-symbols-outlined text-gray-400 mr-4">{{ category.icon }}</span>
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900">{{ category.label }}</p>
+                                        <p class="text-xs text-gray-500">Slug: {{ category.slug }} | Order: {{ category.order }}</p>
+                                    </div>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button @click="editCategory(category)" class="text-blue-600 hover:text-blue-900">编辑</button>
+                                    <button @click="deleteCategory(category.id)" class="text-red-600 hover:text-red-900">删除</button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Cards View -->
+                <div v-if="currentView === 'cards'">
+                     <div class="flex justify-between items-center mb-6">
+                        <div class="flex items-center space-x-4">
+                            <h2 class="text-lg font-medium text-gray-900">卡片列表</h2>
+                            <select v-model="filterCategoryId" class="rounded-md border-gray-300 text-sm">
+                                <option :value="null">所有分类</option>
+                                <option v-for="cat in categories" :value="cat.id">{{ cat.label }}</option>
+                            </select>
+                        </div>
+                        <button @click="openModal('card')" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center">
+                            <span class="material-symbols-outlined mr-1">add</span> 新增卡片
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div v-for="card in filteredCards" :key="card.id" class="bg-white p-4 rounded-lg shadow border border-gray-200">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center">
+                                    <div :class="[card.icon_bg_class, 'w-8 h-8 rounded flex items-center justify-center mr-2']">
+                                        <span :class="[card.icon_color_class, 'material-symbols-outlined text-sm']">{{ card.icon }}</span>
+                                    </div>
+                                    <h3 class="text-sm font-bold text-gray-900 truncate w-32">{{ card.title }}</h3>
+                                </div>
+                                <div class="flex space-x-1 text-xs">
+                                    <button @click="editCard(card)" class="text-blue-600 p-1">编辑</button>
+                                    <button @click="deleteCard(card.id)" class="text-red-600 p-1">删除</button>
+                                </div>
+                            </div>
+                            <p class="text-xs text-gray-500 mb-1">{{ getCategoryName(card.category_id) }}</p>
+                            <p class="text-xs text-gray-600 line-clamp-2">{{ card.description }}</p>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+
+        <!-- Modal -->
+        <div v-if="showModal" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="closeModal"></div>
+                <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+                <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">{{ modalTitle }}</h3>
+                    
+                    <!-- Category Form -->
+                    <form v-if="modalType === 'category'" @submit.prevent="saveCategory">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Slug (ID)</label>
+                                <input v-model="formCategory.slug" type="text" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Label (名称)</label>
+                                <input v-model="formCategory.label" type="text" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Icon (Material Symbol)</label>
+                                <input v-model="formCategory.icon" type="text" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                            </div>
+                             <div>
+                                <label class="block text-sm font-medium text-gray-700">Order</label>
+                                <input v-model.number="formCategory.order" type="number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                            </div>
+                            <div class="flex items-center">
+                                <input v-model="formCategory.active" type="checkbox" class="h-4 w-4 text-blue-600 border-gray-300 rounded">
+                                <label class="ml-2 block text-sm text-gray-900">Default Active</label>
+                            </div>
+                        </div>
+                        <div class="mt-5 sm:mt-6 flex justify-end space-x-2">
+                            <button type="button" @click="closeModal" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50">取消</button>
+                            <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">保存</button>
+                        </div>
+                    </form>
+
+                    <!-- Card Form -->
+                    <form v-if="modalType === 'card'" @submit.prevent="saveCard">
+                        <div class="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-2">
+                            <div class="sm:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700">分类</label>
+                                <select v-model="formCard.category_id" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                                    <option v-for="cat in categories" :value="cat.id">{{ cat.label }}</option>
+                                </select>
+                            </div>
+                            <div class="sm:col-span-1">
+                                <label class="block text-sm font-medium text-gray-700">标题</label>
+                                <input v-model="formCard.title" type="text" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                            </div>
+                            <div class="sm:col-span-1">
+                                <label class="block text-sm font-medium text-gray-700">副标题</label>
+                                <input v-model="formCard.subtitle" type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                            </div>
+                             <div class="sm:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700">链接 (Href)</label>
+                                <input v-model="formCard.href" type="text" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700">描述</label>
+                                <textarea v-model="formCard.description" rows="2" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"></textarea>
+                            </div>
+                            <div class="sm:col-span-1">
+                                <label class="block text-sm font-medium text-gray-700">图标</label>
+                                <input v-model="formCard.icon" type="text" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                            </div>
+                            <div class="sm:col-span-1">
+                                <label class="block text-sm font-medium text-gray-700">排序</label>
+                                <input v-model.number="formCard.order" type="number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                            </div>
+                            <div class="sm:col-span-1">
+                                <label class="block text-sm font-medium text-gray-700">Bg Class</label>
+                                <input v-model="formCard.icon_bg_class" type="text" placeholder="bg-blue-100" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                            </div>
+                             <div class="sm:col-span-1">
+                                <label class="block text-sm font-medium text-gray-700">Color Class</label>
+                                <input v-model="formCard.icon_color_class" type="text" placeholder="text-blue-500" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                            </div>
+                        </div>
+                        <div class="mt-5 sm:mt-6 flex justify-end space-x-2">
+                            <button type="button" @click="closeModal" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50">取消</button>
+                            <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">保存</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#admin-app',
+            data: {
+                currentView: 'categories',
+                categories: [],
+                cards: [],
+                filterCategoryId: null,
+                showModal: false,
+                modalType: '', // 'category' or 'card'
+                isEditing: false,
+                formCategory: { id: null, slug: '', label: '', icon: '', order: 0, active: false },
+                formCard: { id: null, category_id: null, title: '', subtitle: '', description: '', icon: '', icon_bg_class: 'bg-blue-100', icon_color_class: 'text-blue-500', href: '', order: 0 }
+            },
+            computed: {
+                modalTitle() {
+                    return (this.isEditing ? '编辑' : '新增') + (this.modalType === 'category' ? '分类' : '卡片');
+                },
+                filteredCards() {
+                    if (!this.filterCategoryId) return this.cards;
+                    return this.cards.filter(c => c.category_id === this.filterCategoryId);
+                }
+            },
+            async created() {
+                this.checkAuth();
+                await this.fetchCategories();
+                await this.fetchCards();
+            },
+            methods: {
+                getHeaders() {
+                    const token = localStorage.getItem('access_token');
+                    return {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    };
+                },
+                checkAuth() {
+                    if (!localStorage.getItem('access_token')) {
+                        window.location.href = '/login';
+                    }
+                },
+                logout() {
+                    localStorage.removeItem('access_token');
+                    localStorage.removeItem('token_type');
+                    window.location.href = '/';
+                },
+                async fetchCategories() {
+                    const res = await fetch('/api/categories/', { headers: this.getHeaders() });
+                    if (res.ok) this.categories = await res.json();
+                    else if (res.status === 401) this.logout();
+                },
+                async fetchCards() {
+                    const res = await fetch('/api/cards/', { headers: this.getHeaders() });
+                    if (res.ok) this.cards = await res.json();
+                },
+                getCategoryName(id) {
+                    const cat = this.categories.find(c => c.id === id);
+                    return cat ? cat.label : 'Unknown';
+                },
+                openModal(type) {
+                    this.modalType = type;
+                    this.isEditing = false;
+                    this.showModal = true;
+                    if (type === 'category') {
+                        this.formCategory = { id: null, slug: '', label: '', icon: '', order: this.categories.length, active: false };
+                    } else {
+                        this.formCard = { id: null, category_id: this.categories[0]?.id, title: '', subtitle: '', description: '', icon: 'link', icon_bg_class: 'bg-blue-100', icon_color_class: 'text-blue-500', href: '', order: 0 };
+                    }
+                },
+                editCategory(category) {
+                    this.modalType = 'category';
+                    this.isEditing = true;
+                    this.formCategory = { ...category };
+                    this.showModal = true;
+                },
+                editCard(card) {
+                    this.modalType = 'card';
+                    this.isEditing = true;
+                    this.formCard = { ...card };
+                    this.showModal = true;
+                },
+                closeModal() {
+                    this.showModal = false;
+                },
+                async saveCategory() {
+                    const method = this.isEditing ? 'PUT' : 'POST';
+                    const url = this.isEditing ? `/api/categories/${this.formCategory.id}` : '/api/categories/';
+                    
+                    const res = await fetch(url, {
+                        method: method,
+                        headers: this.getHeaders(),
+                        body: JSON.stringify(this.formCategory)
+                    });
+
+                    if (res.ok) {
+                        await this.fetchCategories();
+                        this.closeModal();
+                    } else {
+                        alert('保存失败');
+                    }
+                },
+                async saveCard() {
+                     const method = this.isEditing ? 'PUT' : 'POST';
+                    const url = this.isEditing ? `/api/cards/${this.formCard.id}` : '/api/cards/';
+                    
+                    const res = await fetch(url, {
+                        method: method,
+                        headers: this.getHeaders(),
+                        body: JSON.stringify(this.formCard)
+                    });
+
+                    if (res.ok) {
+                        await this.fetchCards();
+                        this.closeModal();
+                    } else {
+                        alert('保存失败');
+                    }
+                },
+                async deleteCategory(id) {
+                    if (!confirm('确认删除该分类吗？')) return;
+                    const res = await fetch(`/api/categories/${id}`, { method: 'DELETE', headers: this.getHeaders() });
+                    if (res.ok) this.fetchCategories();
+                },
+                async deleteCard(id) {
+                    if (!confirm('确认删除该卡片吗？')) return;
+                    const res = await fetch(`/api/cards/${id}`, { method: 'DELETE', headers: this.getHeaders() });
+                    if (res.ok) this.fetchCards();
+                }
+            }
+        });
+    </script>
+{% endraw %}
+</body>
+</html>

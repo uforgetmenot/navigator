@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Developer Navigation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+        .tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 8px;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.2s, visibility 0.2s;
+        }
+        .group:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+<script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#63B3ED",
+              "background-light": "#F7FAFC",
+              "card-light": "#FFFFFF",
+              "text-light": "#2D3748",
+              "subtle-light": "#718096",
+              "border-light": "#E2E8F0",
+            },
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              mono: ["Roboto Mono", "monospace"],
+            },
+            borderRadius: {
+              DEFAULT: "0.5rem",
+              'lg': '0.75rem',
+              'xl': '1rem'
+            },
+          },
+        },
+      };
+    </script>
+</head>
+<body class="bg-background-light font-sans text-text-light">
+<div id="app"></div>
+<script>
+      async function loadNavigation() {
+        const app = document.getElementById("app");
+        try {
+          const response = await fetch("data/navigation.json");
+          if (!response.ok) {
+            throw new Error("无法加载导航数据");
+          }
+          const data = await response.json();
+          renderPage(app, data);
+        } catch (error) {
+          console.error(error);
+          app.innerHTML = `<div class="p-8 text-red-500">无法加载页面数据，请稍后重试。</div>`;
+        }
+      }
+
+      function renderPage(app, data) {
+        const activeSectionId = getActiveSectionId(data.sidebar.menuItems);
+        const menuItems = data.sidebar.menuItems
+          .map((item) => renderMenuItem(item, activeSectionId))
+          .join("");
+        const headerLinks = data.header.links
+          .map(
+            (link) => `
+              <a class="text-sm font-medium text-text-light hover:text-primary" href="${link.href}">${link.label}</a>
+            `
+          )
+          .join("");
+        const activeSectionContent = renderActiveSection(
+          data.sections,
+          activeSectionId
+        );
+
+        app.innerHTML = `
+          <div class="flex h-screen min-w-[1280px]">
+            <aside class="w-64 flex-shrink-0 bg-card-light border-r border-border-light flex flex-col">
+              <div class="h-16 flex items-center px-6 border-b border-border-light">
+                <span class="material-symbols-outlined text-primary text-3xl">${data.branding.icon}</span>
+                <h1 class="text-xl font-bold ml-2 text-text-light">${data.branding.title}</h1>
+              </div>
+              <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+                ${menuItems}
+              </nav>
+              <div class="p-4 border-t border-border-light">
+                <div class="flex items-center justify-between text-sm text-subtle-light">
+                  <div class="flex items-center group relative">
+                    <span class="material-symbols-outlined mr-2 text-base ${data.sidebar.status.indicator.colorClass}">${data.sidebar.status.indicator.icon}</span>
+                    <span>${data.sidebar.status.indicator.text}</span>
+                    <div class="tooltip w-max bg-gray-800 text-white text-xs rounded py-1 px-2">
+                      ${data.sidebar.status.indicator.tooltip}
+                    </div>
+                  </div>
+                  <div class="relative group">
+                    <span class="material-symbols-outlined cursor-pointer text-base">
+                      ${data.sidebar.status.refresh.icon}
+                    </span>
+                    <div class="tooltip w-max bg-gray-800 text-white text-xs rounded py-1 px-2">
+                      ${data.sidebar.status.refresh.tooltip}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </aside>
+            <div class="flex-1 flex flex-col h-screen">
+              <header class="h-16 flex-shrink-0 bg-card-light border-b border-border-light flex items-center justify-between px-6">
+                <div class="flex items-center space-x-6">
+                  ${headerLinks}
+                </div>
+              </header>
+              <main class="flex-1 overflow-y-auto p-8 bg-background-light">
+                <div class="max-w-7xl mx-auto">
+                  ${renderHero(data.hero)}
+                  <div id="sections-container">
+                    ${activeSectionContent}
+                  </div>
+                </div>
+              </main>
+            </div>
+          </div>
+        `;
+        attachSearchHandler();
+        attachMenuHandlers(data, activeSectionId);
+      }
+
+      function getActiveSectionId(menuItems) {
+        const activeItem = menuItems.find((item) => item.active);
+        return activeItem ? activeItem.id : menuItems[0]?.id;
+      }
+
+      function renderMenuItem(item, activeId) {
+        const isActive = item.id === activeId;
+        const baseClasses =
+          "flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-colors duration-200";
+        const stateClasses = isActive
+          ? "text-white bg-primary"
+          : "text-subtle-light hover:bg-background-light";
+        return `
+              <a class="${baseClasses} ${stateClasses}" data-section-id="${item.id}" href="${item.href}">
+                <span class="material-symbols-outlined mr-3 text-base">${item.icon}</span>
+                ${item.label}
+              </a>
+            `;
+      }
+
+      function renderHero(hero) {
+        return `
+          <section class="mb-12">
+            <div class="relative bg-white border border-border-light rounded-xl p-8 overflow-hidden">
+              <div class="absolute -top-16 -right-16 w-48 h-48 bg-primary/10 rounded-full"></div>
+              <div class="absolute -bottom-24 -left-24 w-60 h-60 bg-primary/10 rounded-full"></div>
+              <div class="relative z-10 flex flex-col items-center text-center">
+                <div class="w-full max-w-2xl">
+                  <form id="search-form" class="relative">
+                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-subtle-light">search</span>
+                    <input id="search-input" class="w-full pl-12 pr-24 py-3 rounded-lg border border-border-light bg-card-light focus:ring-2 focus:ring-primary focus:border-primary transition duration-200 text-text-light placeholder-subtle-light" placeholder="${hero.searchPlaceholder}" type="text" />
+                    <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 px-4 py-2 rounded-md bg-primary text-white text-sm font-medium hover:bg-primary/80 transition">Google</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </section>
+        `;
+      }
+
+      function renderSection(section) {
+        const cards = section.cards.map((card) => renderCard(card)).join("");
+
+        const actionLink = section.action
+          ? `<a class="text-sm font-medium text-primary hover:underline" href="${section.action.href}">${section.action.label}</a>`
+          : "";
+
+        return `
+          <section class="mb-12">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-2xl font-bold text-text-light">${section.title}</h3>
+              ${actionLink}
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              ${cards}
+            </div>
+          </section>
+        `;
+      }
+
+      function renderCard(card) {
+        const containerClasses =
+          "block bg-card-light p-6 rounded-xl border border-border-light hover:shadow-lg hover:-translate-y-1 transition-all duration-300";
+        const content = `
+          <div class="flex items-center mb-4">
+            <div class="w-12 h-12 ${card.iconBgClass} rounded-lg flex items-center justify-center mr-4">
+              <span class="material-symbols-outlined ${card.iconColorClass}">${card.icon}</span>
+            </div>
+            <div>
+              <h4 class="font-bold text-lg text-text-light">${card.title}</h4>
+              <p class="text-sm text-subtle-light">${card.subtitle ?? ""}</p>
+            </div>
+          </div>
+          <p class="text-sm text-subtle-light line-clamp-2">${card.description}</p>
+        `;
+
+        if (card.href && card.href !== "#") {
+          return `
+            <a class="${containerClasses}" href="${card.href}" target="_blank" rel="noopener noreferrer">
+              ${content}
+            </a>
+          `;
+        }
+
+        return `
+          <div class="${containerClasses}">
+            ${content}
+          </div>
+        `;
+      }
+
+      function renderActiveSection(sections, sectionId) {
+        const section = sections.find((item) => item.id === sectionId);
+        if (!section) {
+          return `
+            <section class="mb-12">
+              <div class="bg-card-light border border-border-light rounded-xl p-12 text-center text-subtle-light">
+                该分类的内容正在完善中，敬请期待。
+              </div>
+            </section>
+          `;
+        }
+        return renderSection(section);
+      }
+
+      function attachMenuHandlers(data, initialActiveId) {
+        const menuLinks = document.querySelectorAll("[data-section-id]");
+        const sectionsContainer = document.getElementById("sections-container");
+        if (!menuLinks.length || !sectionsContainer) {
+          return;
+        }
+
+        let currentActiveId = initialActiveId;
+
+        const updateActiveState = (nextActiveId) => {
+          currentActiveId = nextActiveId;
+          data.sidebar.menuItems.forEach((item) => {
+            item.active = item.id === currentActiveId;
+          });
+
+          menuLinks.forEach((link) => {
+            const sectionId = link.getAttribute("data-section-id");
+            const isActive = sectionId === currentActiveId;
+            const baseClasses =
+              "flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-colors duration-200";
+            const stateClasses = isActive
+              ? "text-white bg-primary"
+              : "text-subtle-light hover:bg-background-light";
+            link.className = `${baseClasses} ${stateClasses}`;
+          });
+
+          sectionsContainer.innerHTML = renderActiveSection(
+            data.sections,
+            currentActiveId
+          );
+        };
+
+        menuLinks.forEach((link) => {
+          link.addEventListener("click", (event) => {
+            event.preventDefault();
+            const sectionId = link.getAttribute("data-section-id");
+            if (!sectionId || sectionId === currentActiveId) {
+              return;
+            }
+            updateActiveState(sectionId);
+          });
+        });
+      }
+
+      function attachSearchHandler() {
+        const form = document.getElementById("search-form");
+        const input = document.getElementById("search-input");
+        if (!form || !input) {
+          return;
+        }
+
+        form.addEventListener("submit", (event) => {
+          event.preventDefault();
+          const query = input.value.trim();
+          if (!query) {
+            return;
+          }
+
+          const googleUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+          window.open(googleUrl, "_blank");
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", loadNavigation);
+    </script>
+</body></html>

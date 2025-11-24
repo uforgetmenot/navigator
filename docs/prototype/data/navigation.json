@@ -1,0 +1,432 @@
+{
+  "branding": {
+    "icon": "hub",
+    "title": "个人导航网站"
+  },
+  "sidebar": {
+    "menuItems": [
+      {
+        "id": "ai",
+        "label": "AI",
+        "icon": "smart_toy",
+        "href": "#",
+        "active": true
+      },
+      {
+        "id": "operations",
+        "label": "运营",
+        "icon": "hub",
+        "href": "#",
+        "active": false
+      },
+      {
+        "id": "local",
+        "label": "本地",
+        "icon": "dns",
+        "href": "#",
+        "active": false
+      },
+      {
+        "id": "api",
+        "label": "API",
+        "icon": "cloud_sync",
+        "href": "#",
+        "active": false
+      },
+      {
+        "id": "investment",
+        "label": "投资",
+        "icon": "show_chart",
+        "href": "#",
+        "active": false
+      },
+      {
+        "id": "email",
+        "label": "邮箱",
+        "icon": "mail",
+        "href": "#",
+        "active": false
+      },
+      {
+        "id": "design",
+        "label": "设计",
+        "icon": "palette",
+        "href": "#",
+        "active": false
+      },
+      {
+        "id": "consulting",
+        "label": "咨询",
+        "icon": "support_agent",
+        "href": "#",
+        "active": false
+      },
+      {
+        "id": "notes",
+        "label": "笔记",
+        "icon": "sticky_note_2",
+        "href": "#",
+        "active": false
+      },
+      {
+        "id": "research",
+        "label": "调研",
+        "icon": "search",
+        "href": "#",
+        "active": false
+      },
+      {
+        "id": "news",
+        "label": "资讯",
+        "icon": "feed",
+        "href": "#",
+        "active": false
+      }
+    ],
+    "status": {
+      "indicator": {
+        "icon": "circle",
+        "colorClass": "text-green-500",
+        "text": "API 状态: 正常",
+        "tooltip": "所有系统运行正常"
+      },
+      "refresh": {
+        "icon": "sync",
+        "tooltip": "上次检查: 1分钟前"
+      }
+    }
+  },
+  "header": {
+    "links": [
+      {
+        "label": "主站",
+        "href": "/"
+      }
+    ]
+  },
+  "hero": {
+    "searchPlaceholder": "搜索工具、资源和文章..."
+  },
+  "sections": [
+    {
+      "id": "ai",
+      "type": "grid",
+      "title": "AI 工具",
+      "cards": [
+        {
+          "icon": "travel_explore",
+          "iconBgClass": "bg-indigo-100",
+          "iconColorClass": "text-indigo-500",
+          "title": "Perplexity",
+          "subtitle": "AI 搜索",
+          "description": "实时知识检索与多模态问答平台。",
+          "href": "https://www.perplexity.ai/"
+        },
+        {
+          "icon": "psychology_alt",
+          "iconBgClass": "bg-emerald-100",
+          "iconColorClass": "text-emerald-500",
+          "title": "ChatGPT",
+          "subtitle": "对话助手",
+          "description": "OpenAI 出品的通用型智能助手。",
+          "href": "https://chat.openai.com/"
+        },
+        {
+          "icon": "auto_awesome",
+          "iconBgClass": "bg-blue-100",
+          "iconColorClass": "text-blue-500",
+          "title": "Gemini",
+          "subtitle": "Google AI",
+          "description": "Google Gemini 多模态创意与分析助手。",
+          "href": "https://gemini.google.com/"
+        },
+        {
+          "icon": "neurology",
+          "iconBgClass": "bg-rose-100",
+          "iconColorClass": "text-rose-500",
+          "title": "Grok",
+          "subtitle": "X AI",
+          "description": "紧跟实时信息的对话式 AI 平台。",
+          "href": "https://grok.com"
+        },
+        {
+          "icon": "translate",
+          "iconBgClass": "bg-amber-100",
+          "iconColorClass": "text-amber-500",
+          "title": "通义千问",
+          "subtitle": "阿里巴巴",
+          "description": "面向中文场景的企业级大模型服务。",
+          "href": "https://www.tongyi.com/"
+        }
+      ]
+    },
+    {
+      "id": "operations",
+      "type": "grid",
+      "title": "运营平台",
+      "cards": [
+        {
+          "icon": "code",
+          "iconBgClass": "bg-gray-100",
+          "iconColorClass": "text-gray-600",
+          "title": "GitHub",
+          "subtitle": "代码托管",
+          "description": "全球最大的开源与协作开发社区。",
+          "href": "https://github.com/"
+        },
+        {
+          "icon": "rocket_launch",
+          "iconBgClass": "bg-cyan-100",
+          "iconColorClass": "text-cyan-500",
+          "title": "Vercel",
+          "subtitle": "前端部署",
+          "description": "极速构建与发布前端应用的云平台。",
+          "href": "https://vercel.com/"
+        },
+        {
+          "icon": "cloud",
+          "iconBgClass": "bg-orange-100",
+          "iconColorClass": "text-orange-500",
+          "title": "Cloudflare",
+          "subtitle": "边缘网络",
+          "description": "集 CDN、安全与无服务器计算于一体。",
+          "href": "https://www.cloudflare.com/"
+        }
+      ]
+    },
+    {
+      "id": "local",
+      "type": "grid",
+      "title": "本地服务",
+      "cards": [
+        {
+          "icon": "dns",
+          "iconBgClass": "bg-lime-100",
+          "iconColorClass": "text-lime-500",
+          "title": "Localhost",
+          "subtitle": "开发环境",
+          "description": "跳转至本地默认服务入口。",
+          "href": "http://localhost/"
+        },
+        {
+          "icon": "hub",
+          "iconBgClass": "bg-purple-100",
+          "iconColorClass": "text-purple-500",
+          "title": "OneAPI",
+          "subtitle": "接口网关",
+          "description": "本地统一 API 管理与代理服务。",
+          "href": "http://localhost:4000/"
+        },
+        {
+          "icon": "lan",
+          "iconBgClass": "bg-teal-100",
+          "iconColorClass": "text-teal-500",
+          "title": "YTOO",
+          "subtitle": "内部平台",
+          "description": "团队内部资源管理与调度中心。",
+          "href": "https://stentvessel.shop/"
+        }
+      ]
+    },
+    {
+      "id": "api",
+      "type": "grid",
+      "title": "API 服务",
+      "cards": [
+        {
+          "icon": "cloud_sync",
+          "iconBgClass": "bg-blue-100",
+          "iconColorClass": "text-blue-500",
+          "title": "云雾AI",
+          "subtitle": "模型接口",
+          "description": "提供多模型接入的统一 API 平台。",
+          "href": "https://yunwu.ai/"
+        },
+        {
+          "icon": "code",
+          "iconBgClass": "bg-violet-100",
+          "iconColorClass": "text-violet-500",
+          "title": "AICodeMirror",
+          "subtitle": "代码镜像",
+          "description": "AI 驱动的代码生成与优化平台。",
+          "href": "https://www.aicodemirror.com/"
+        }
+      ]
+    },
+    {
+      "id": "investment",
+      "type": "grid",
+      "title": "投资与数据",
+      "cards": [
+        {
+          "icon": "query_stats",
+          "iconBgClass": "bg-slate-100",
+          "iconColorClass": "text-slate-600",
+          "title": "TuShare",
+          "subtitle": "量化数据",
+          "description": "金融数据接口，支持量化分析与研究。",
+          "href": "https://tushare.pro/"
+        },
+        {
+          "icon": "rocket",
+          "iconBgClass": "bg-pink-100",
+          "iconColorClass": "text-pink-500",
+          "title": "Spaceship",
+          "subtitle": "投资平台",
+          "description": "高净值财富管理与投资顾问服务。",
+          "href": "https://www.spaceship.com/"
+        }
+      ]
+    },
+    {
+      "id": "email",
+      "type": "grid",
+      "title": "邮箱服务",
+      "cards": [
+        {
+          "icon": "mail",
+          "iconBgClass": "bg-red-100",
+          "iconColorClass": "text-red-500",
+          "title": "Google Mail",
+          "subtitle": "企业邮箱",
+          "description": "访问 Gmail 邮箱与 Google Workspace。",
+          "href": "https://mail.google.com/"
+        },
+        {
+          "icon": "alternate_email",
+          "iconBgClass": "bg-amber-100",
+          "iconColorClass": "text-amber-500",
+          "title": "阿里云邮箱",
+          "subtitle": "企业服务",
+          "description": "阿里云企业邮箱登录入口。",
+          "href": "https://mail.aliyun.com/"
+        }
+      ]
+    },
+    {
+      "id": "design",
+      "type": "grid",
+      "title": "设计资源",
+      "cards": [
+        {
+          "icon": "category",
+          "iconBgClass": "bg-purple-100",
+          "iconColorClass": "text-purple-500",
+          "title": "AxtureShop",
+          "subtitle": "原型资源",
+          "description": "海量 Axure 原型模板与组件资源。",
+          "href": "https://www.axureshop.com/"
+        },
+        {
+          "icon": "gesture",
+          "iconBgClass": "bg-green-100",
+          "iconColorClass": "text-green-500",
+          "title": "Stitch",
+          "subtitle": "设计系统",
+          "description": "Google 出品的设计系统参考站点。",
+          "href": "https://stitch.withgoogle.com/"
+        }
+      ]
+    },
+    {
+      "id": "consulting",
+      "type": "grid",
+      "title": "咨询研究",
+      "cards": [
+        {
+          "icon": "support_agent",
+          "iconBgClass": "bg-sky-100",
+          "iconColorClass": "text-sky-500",
+          "title": "三个皮匠",
+          "subtitle": "行业报告",
+          "description": "覆盖多行业的咨询报告与研究资料。",
+          "href": "https://www.sgpjbg.com/"
+        }
+      ]
+    },
+    {
+      "id": "notes",
+      "type": "grid",
+      "title": "笔记与知识库",
+      "cards": [
+        {
+          "icon": "menu_book",
+          "iconBgClass": "bg-emerald-100",
+          "iconColorClass": "text-emerald-500",
+          "title": "开发笔记",
+          "subtitle": "个人知识库",
+          "description": "沉淀开发经验与学习笔记的站点。",
+          "href": "https://dev.131494.xyz/"
+        }
+      ]
+    },
+    {
+      "id": "research",
+      "type": "grid",
+      "title": "调研平台",
+      "cards": [
+        {
+          "icon": "work",
+          "iconBgClass": "bg-green-100",
+          "iconColorClass": "text-green-500",
+          "title": "BOSS直聘",
+          "subtitle": "招聘平台",
+          "description": "产品经理岗位招聘信息与行业动态。",
+          "href": "https://www.zhipin.com/web/geek/jobs?city=101270100&query=%E4%BA%A7%E5%93%81%E7%BB%8F%E7%90%86"
+        },
+        {
+          "icon": "business_center",
+          "iconBgClass": "bg-blue-100",
+          "iconColorClass": "text-blue-500",
+          "title": "智联招聘",
+          "subtitle": "求职平台",
+          "description": "专业的职场招聘与人才服务平台。",
+          "href": "https://www.zhaopin.com/sou/jl801/kw9QJL9GBUPTQ0C/p1"
+        },
+        {
+          "icon": "groups",
+          "iconBgClass": "bg-indigo-100",
+          "iconColorClass": "text-indigo-500",
+          "title": "领英",
+          "subtitle": "职业网络",
+          "description": "全球领先的职业社交与招聘平台。",
+          "href": "https://www.linkedin.com/jobs/search/?currentJobId=4317462255&geoId=103644278&keywords=Product%20Manager&origin=JOB_SEARCH_PAGE_SEARCH_BUTTON&refresh=true"
+        }
+      ]
+    },
+    {
+      "id": "news",
+      "type": "grid",
+      "title": "资讯平台",
+      "cards": [
+        {
+          "icon": "public",
+          "iconBgClass": "bg-orange-100",
+          "iconColorClass": "text-orange-500",
+          "title": "知识星球",
+          "subtitle": "知识社区",
+          "description": "高质量的知识分享与付费社群平台。",
+          "href": "https://zsxq.com/"
+        },
+        {
+          "icon": "psychology",
+          "iconBgClass": "bg-teal-100",
+          "iconColorClass": "text-teal-500",
+          "title": "IndieHackers",
+          "subtitle": "独立开发",
+          "description": "独立开发者社区与创业经验分享。",
+          "href": "https://www.indiehackers.com/"
+        },
+        {
+          "icon": "launch",
+          "iconBgClass": "bg-red-100",
+          "iconColorClass": "text-red-500",
+          "title": "ProductHunt",
+          "subtitle": "产品发现",
+          "description": "发现最新产品与创新项目的社区平台。",
+          "href": "https://www.producthunt.com/categories?ref=header_nav"
+        }
+      ]
+    }
+  ]
+}

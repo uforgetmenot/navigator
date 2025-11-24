@@ -1,0 +1,126 @@
+INFO:     Started server process [87724]
+INFO:     Waiting for application startup.
+2025-11-22 22:34:04,817 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2025-11-22 22:34:04,818 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("category")
+2025-11-22 22:34:04,818 INFO sqlalchemy.engine.Engine [raw sql] ()
+2025-11-22 22:34:04,822 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("navigationcard")
+2025-11-22 22:34:04,822 INFO sqlalchemy.engine.Engine [raw sql] ()
+2025-11-22 22:34:04,824 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("siteconfig")
+2025-11-22 22:34:04,824 INFO sqlalchemy.engine.Engine [raw sql] ()
+2025-11-22 22:34:04,825 INFO sqlalchemy.engine.Engine COMMIT
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:58638 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58656 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+2025-11-22 22:35:44,853 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2025-11-22 22:35:44,859 INFO sqlalchemy.engine.Engine SELECT category.id, category.slug, category.label, category.icon, category."order", category.active, category.created_at, category.updated_at 
+FROM category ORDER BY category."order"
+2025-11-22 22:35:44,859 INFO sqlalchemy.engine.Engine [generated in 0.00037s] ()
+2025-11-22 22:35:44,862 INFO sqlalchemy.engine.Engine SELECT siteconfig.id, siteconfig."key", siteconfig.value, siteconfig.description, siteconfig.updated_at 
+FROM siteconfig
+2025-11-22 22:35:44,863 INFO sqlalchemy.engine.Engine [generated in 0.00041s] ()
+2025-11-22 22:35:44,867 INFO sqlalchemy.engine.Engine SELECT navigationcard.id AS navigationcard_id, navigationcard.category_id AS navigationcard_category_id, navigationcard.title AS navigationcard_title, navigationcard.subtitle AS navigationcard_subtitle, navigationcard.description AS navigationcard_description, navigationcard.icon AS navigationcard_icon, navigationcard.icon_bg_class AS navigationcard_icon_bg_class, navigationcard.icon_color_class AS navigationcard_icon_color_class, navigationcard.href AS navigationcard_href, navigationcard."order" AS navigationcard_order, navigationcard.created_at AS navigationcard_created_at, navigationcard.updated_at AS navigationcard_updated_at 
+FROM navigationcard 
+WHERE ? = navigationcard.category_id
+2025-11-22 22:35:44,867 INFO sqlalchemy.engine.Engine [generated in 0.00047s] (1,)
+2025-11-22 22:35:44,871 INFO sqlalchemy.engine.Engine SELECT navigationcard.id AS navigationcard_id, navigationcard.category_id AS navigationcard_category_id, navigationcard.title AS navigationcard_title, navigationcard.subtitle AS navigationcard_subtitle, navigationcard.description AS navigationcard_description, navigationcard.icon AS navigationcard_icon, navigationcard.icon_bg_class AS navigationcard_icon_bg_class, navigationcard.icon_color_class AS navigationcard_icon_color_class, navigationcard.href AS navigationcard_href, navigationcard."order" AS navigationcard_order, navigationcard.created_at AS navigationcard_created_at, navigationcard.updated_at AS navigationcard_updated_at 
+FROM navigationcard 
+WHERE ? = navigationcard.category_id
+2025-11-22 22:35:44,871 INFO sqlalchemy.engine.Engine [cached since 0.004212s ago] (2,)
+2025-11-22 22:35:44,873 INFO sqlalchemy.engine.Engine SELECT navigationcard.id AS navigationcard_id, navigationcard.category_id AS navigationcard_category_id, navigationcard.title AS navigationcard_title, navigationcard.subtitle AS navigationcard_subtitle, navigationcard.description AS navigationcard_description, navigationcard.icon AS navigationcard_icon, navigationcard.icon_bg_class AS navigationcard_icon_bg_class, navigationcard.icon_color_class AS navigationcard_icon_color_class, navigationcard.href AS navigationcard_href, navigationcard."order" AS navigationcard_order, navigationcard.created_at AS navigationcard_created_at, navigationcard.updated_at AS navigationcard_updated_at 
+FROM navigationcard 
+WHERE ? = navigationcard.category_id
+2025-11-22 22:35:44,874 INFO sqlalchemy.engine.Engine [cached since 0.006722s ago] (3,)
+2025-11-22 22:35:44,876 INFO sqlalchemy.engine.Engine SELECT navigationcard.id AS navigationcard_id, navigationcard.category_id AS navigationcard_category_id, navigationcard.title AS navigationcard_title, navigationcard.subtitle AS navigationcard_subtitle, navigationcard.description AS navigationcard_description, navigationcard.icon AS navigationcard_icon, navigationcard.icon_bg_class AS navigationcard_icon_bg_class, navigationcard.icon_color_class AS navigationcard_icon_color_class, navigationcard.href AS navigationcard_href, navigationcard."order" AS navigationcard_order, navigationcard.created_at AS navigationcard_created_at, navigationcard.updated_at AS navigationcard_updated_at 
+FROM navigationcard 
+WHERE ? = navigationcard.category_id
+2025-11-22 22:35:44,876 INFO sqlalchemy.engine.Engine [cached since 0.009453s ago] (4,)
+2025-11-22 22:35:44,879 INFO sqlalchemy.engine.Engine SELECT navigationcard.id AS navigationcard_id, navigationcard.category_id AS navigationcard_category_id, navigationcard.title AS navigationcard_title, navigationcard.subtitle AS navigationcard_subtitle, navigationcard.description AS navigationcard_description, navigationcard.icon AS navigationcard_icon, navigationcard.icon_bg_class AS navigationcard_icon_bg_class, navigationcard.icon_color_class AS navigationcard_icon_color_class, navigationcard.href AS navigationcard_href, navigationcard."order" AS navigationcard_order, navigationcard.created_at AS navigationcard_created_at, navigationcard.updated_at AS navigationcard_updated_at 
+FROM navigationcard 
+WHERE ? = navigationcard.category_id
+2025-11-22 22:35:44,879 INFO sqlalchemy.engine.Engine [cached since 0.01198s ago] (5,)
+2025-11-22 22:35:44,881 INFO sqlalchemy.engine.Engine SELECT navigationcard.id AS navigationcard_id, navigationcard.category_id AS navigationcard_category_id, navigationcard.title AS navigationcard_title, navigationcard.subtitle AS navigationcard_subtitle, navigationcard.description AS navigationcard_description, navigationcard.icon AS navigationcard_icon, navigationcard.icon_bg_class AS navigationcard_icon_bg_class, navigationcard.icon_color_class AS navigationcard_icon_color_class, navigationcard.href AS navigationcard_href, navigationcard."order" AS navigationcard_order, navigationcard.created_at AS navigationcard_created_at, navigationcard.updated_at AS navigationcard_updated_at 
+FROM navigationcard 
+WHERE ? = navigationcard.category_id
+2025-11-22 22:35:44,881 INFO sqlalchemy.engine.Engine [cached since 0.01398s ago] (6,)
+2025-11-22 22:35:44,883 INFO sqlalchemy.engine.Engine SELECT navigationcard.id AS navigationcard_id, navigationcard.category_id AS navigationcard_category_id, navigationcard.title AS navigationcard_title, navigationcard.subtitle AS navigationcard_subtitle, navigationcard.description AS navigationcard_description, navigationcard.icon AS navigationcard_icon, navigationcard.icon_bg_class AS navigationcard_icon_bg_class, navigationcard.icon_color_class AS navigationcard_icon_color_class, navigationcard.href AS navigationcard_href, navigationcard."order" AS navigationcard_order, navigationcard.created_at AS navigationcard_created_at, navigationcard.updated_at AS navigationcard_updated_at 
+FROM navigationcard 
+WHERE ? = navigationcard.category_id
+2025-11-22 22:35:44,883 INFO sqlalchemy.engine.Engine [cached since 0.01608s ago] (7,)
+2025-11-22 22:35:44,885 INFO sqlalchemy.engine.Engine SELECT navigationcard.id AS navigationcard_id, navigationcard.category_id AS navigationcard_category_id, navigationcard.title AS navigationcard_title, navigationcard.subtitle AS navigationcard_subtitle, navigationcard.description AS navigationcard_description, navigationcard.icon AS navigationcard_icon, navigationcard.icon_bg_class AS navigationcard_icon_bg_class, navigationcard.icon_color_class AS navigationcard_icon_color_class, navigationcard.href AS navigationcard_href, navigationcard."order" AS navigationcard_order, navigationcard.created_at AS navigationcard_created_at, navigationcard.updated_at AS navigationcard_updated_at 
+FROM navigationcard 
+WHERE ? = navigationcard.category_id
+2025-11-22 22:35:44,886 INFO sqlalchemy.engine.Engine [cached since 0.01872s ago] (8,)
+2025-11-22 22:35:44,887 INFO sqlalchemy.engine.Engine SELECT navigationcard.id AS navigationcard_id, navigationcard.category_id AS navigationcard_category_id, navigationcard.title AS navigationcard_title, navigationcard.subtitle AS navigationcard_subtitle, navigationcard.description AS navigationcard_description, navigationcard.icon AS navigationcard_icon, navigationcard.icon_bg_class AS navigationcard_icon_bg_class, navigationcard.icon_color_class AS navigationcard_icon_color_class, navigationcard.href AS navigationcard_href, navigationcard."order" AS navigationcard_order, navigationcard.created_at AS navigationcard_created_at, navigationcard.updated_at AS navigationcard_updated_at 
+FROM navigationcard 
+WHERE ? = navigationcard.category_id
+2025-11-22 22:35:44,888 INFO sqlalchemy.engine.Engine [cached since 0.02091s ago] (9,)
+2025-11-22 22:35:44,890 INFO sqlalchemy.engine.Engine SELECT navigationcard.id AS navigationcard_id, navigationcard.category_id AS navigationcard_category_id, navigationcard.title AS navigationcard_title, navigationcard.subtitle AS navigationcard_subtitle, navigationcard.description AS navigationcard_description, navigationcard.icon AS navigationcard_icon, navigationcard.icon_bg_class AS navigationcard_icon_bg_class, navigationcard.icon_color_class AS navigationcard_icon_color_class, navigationcard.href AS navigationcard_href, navigationcard."order" AS navigationcard_order, navigationcard.created_at AS navigationcard_created_at, navigationcard.updated_at AS navigationcard_updated_at 
+FROM navigationcard 
+WHERE ? = navigationcard.category_id
+2025-11-22 22:35:44,890 INFO sqlalchemy.engine.Engine [cached since 0.02338s ago] (10,)
+2025-11-22 22:35:44,892 INFO sqlalchemy.engine.Engine SELECT navigationcard.id AS navigationcard_id, navigationcard.category_id AS navigationcard_category_id, navigationcard.title AS navigationcard_title, navigationcard.subtitle AS navigationcard_subtitle, navigationcard.description AS navigationcard_description, navigationcard.icon AS navigationcard_icon, navigationcard.icon_bg_class AS navigationcard_icon_bg_class, navigationcard.icon_color_class AS navigationcard_icon_color_class, navigationcard.href AS navigationcard_href, navigationcard."order" AS navigationcard_order, navigationcard.created_at AS navigationcard_created_at, navigationcard.updated_at AS navigationcard_updated_at 
+FROM navigationcard 
+WHERE ? = navigationcard.category_id
+2025-11-22 22:35:44,893 INFO sqlalchemy.engine.Engine [cached since 0.02578s ago] (11,)
+INFO:     127.0.0.1:58642 - "GET /api/navigation HTTP/1.1" 200 OK
+2025-11-22 22:35:44,896 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:59346 - "GET / HTTP/1.1" 200 OK
+2025-11-22 22:37:56,311 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+INFO:     127.0.0.1:59348 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+2025-11-22 22:37:56,312 INFO sqlalchemy.engine.Engine SELECT category.id, category.slug, category.label, category.icon, category."order", category.active, category.created_at, category.updated_at 
+FROM category ORDER BY category."order"
+2025-11-22 22:37:56,314 INFO sqlalchemy.engine.Engine [cached since 125.8s ago] ()
+2025-11-22 22:37:56,316 INFO sqlalchemy.engine.Engine SELECT siteconfig.id, siteconfig."key", siteconfig.value, siteconfig.description, siteconfig.updated_at 
+FROM siteconfig
+2025-11-22 22:37:56,316 INFO sqlalchemy.engine.Engine [cached since 125.8s ago] ()
+2025-11-22 22:37:56,319 INFO sqlalchemy.engine.Engine SELECT navigationcard.id AS navigationcard_id, navigationcard.category_id AS navigationcard_category_id, navigationcard.title AS navigationcard_title, navigationcard.subtitle AS navigationcard_subtitle, navigationcard.description AS navigationcard_description, navigationcard.icon AS navigationcard_icon, navigationcard.icon_bg_class AS navigationcard_icon_bg_class, navigationcard.icon_color_class AS navigationcard_icon_color_class, navigationcard.href AS navigationcard_href, navigationcard."order" AS navigationcard_order, navigationcard.created_at AS navigationcard_created_at, navigationcard.updated_at AS navigationcard_updated_at 
+FROM navigationcard 
+WHERE ? = navigationcard.category_id
+2025-11-22 22:37:56,319 INFO sqlalchemy.engine.Engine [cached since 125.8s ago] (1,)
+2025-11-22 22:37:56,322 INFO sqlalchemy.engine.Engine SELECT navigationcard.id AS navigationcard_id, navigationcard.category_id AS navigationcard_category_id, navigationcard.title AS navigationcard_title, navigationcard.subtitle AS navigationcard_subtitle, navigationcard.description AS navigationcard_description, navigationcard.icon AS navigationcard_icon, navigationcard.icon_bg_class AS navigationcard_icon_bg_class, navigationcard.icon_color_class AS navigationcard_icon_color_class, navigationcard.href AS navigationcard_href, navigationcard."order" AS navigationcard_order, navigationcard.created_at AS navigationcard_created_at, navigationcard.updated_at AS navigationcard_updated_at 
+FROM navigationcard 
+WHERE ? = navigationcard.category_id
+2025-11-22 22:37:56,322 INFO sqlalchemy.engine.Engine [cached since 125.8s ago] (2,)
+2025-11-22 22:37:56,324 INFO sqlalchemy.engine.Engine SELECT navigationcard.id AS navigationcard_id, navigationcard.category_id AS navigationcard_category_id, navigationcard.title AS navigationcard_title, navigationcard.subtitle AS navigationcard_subtitle, navigationcard.description AS navigationcard_description, navigationcard.icon AS navigationcard_icon, navigationcard.icon_bg_class AS navigationcard_icon_bg_class, navigationcard.icon_color_class AS navigationcard_icon_color_class, navigationcard.href AS navigationcard_href, navigationcard."order" AS navigationcard_order, navigationcard.created_at AS navigationcard_created_at, navigationcard.updated_at AS navigationcard_updated_at 
+FROM navigationcard 
+WHERE ? = navigationcard.category_id
+2025-11-22 22:37:56,324 INFO sqlalchemy.engine.Engine [cached since 125.8s ago] (3,)
+2025-11-22 22:37:56,326 INFO sqlalchemy.engine.Engine SELECT navigationcard.id AS navigationcard_id, navigationcard.category_id AS navigationcard_category_id, navigationcard.title AS navigationcard_title, navigationcard.subtitle AS navigationcard_subtitle, navigationcard.description AS navigationcard_description, navigationcard.icon AS navigationcard_icon, navigationcard.icon_bg_class AS navigationcard_icon_bg_class, navigationcard.icon_color_class AS navigationcard_icon_color_class, navigationcard.href AS navigationcard_href, navigationcard."order" AS navigationcard_order, navigationcard.created_at AS navigationcard_created_at, navigationcard.updated_at AS navigationcard_updated_at 
+FROM navigationcard 
+WHERE ? = navigationcard.category_id
+2025-11-22 22:37:56,326 INFO sqlalchemy.engine.Engine [cached since 125.8s ago] (4,)
+2025-11-22 22:37:56,328 INFO sqlalchemy.engine.Engine SELECT navigationcard.id AS navigationcard_id, navigationcard.category_id AS navigationcard_category_id, navigationcard.title AS navigationcard_title, navigationcard.subtitle AS navigationcard_subtitle, navigationcard.description AS navigationcard_description, navigationcard.icon AS navigationcard_icon, navigationcard.icon_bg_class AS navigationcard_icon_bg_class, navigationcard.icon_color_class AS navigationcard_icon_color_class, navigationcard.href AS navigationcard_href, navigationcard."order" AS navigationcard_order, navigationcard.created_at AS navigationcard_created_at, navigationcard.updated_at AS navigationcard_updated_at 
+FROM navigationcard 
+WHERE ? = navigationcard.category_id
+2025-11-22 22:37:56,328 INFO sqlalchemy.engine.Engine [cached since 125.8s ago] (5,)
+2025-11-22 22:37:56,331 INFO sqlalchemy.engine.Engine SELECT navigationcard.id AS navigationcard_id, navigationcard.category_id AS navigationcard_category_id, navigationcard.title AS navigationcard_title, navigationcard.subtitle AS navigationcard_subtitle, navigationcard.description AS navigationcard_description, navigationcard.icon AS navigationcard_icon, navigationcard.icon_bg_class AS navigationcard_icon_bg_class, navigationcard.icon_color_class AS navigationcard_icon_color_class, navigationcard.href AS navigationcard_href, navigationcard."order" AS navigationcard_order, navigationcard.created_at AS navigationcard_created_at, navigationcard.updated_at AS navigationcard_updated_at 
+FROM navigationcard 
+WHERE ? = navigationcard.category_id
+2025-11-22 22:37:56,331 INFO sqlalchemy.engine.Engine [cached since 125.8s ago] (6,)
+2025-11-22 22:37:56,333 INFO sqlalchemy.engine.Engine SELECT navigationcard.id AS navigationcard_id, navigationcard.category_id AS navigationcard_category_id, navigationcard.title AS navigationcard_title, navigationcard.subtitle AS navigationcard_subtitle, navigationcard.description AS navigationcard_description, navigationcard.icon AS navigationcard_icon, navigationcard.icon_bg_class AS navigationcard_icon_bg_class, navigationcard.icon_color_class AS navigationcard_icon_color_class, navigationcard.href AS navigationcard_href, navigationcard."order" AS navigationcard_order, navigationcard.created_at AS navigationcard_created_at, navigationcard.updated_at AS navigationcard_updated_at 
+FROM navigationcard 
+WHERE ? = navigationcard.category_id
+2025-11-22 22:37:56,333 INFO sqlalchemy.engine.Engine [cached since 125.8s ago] (7,)
+2025-11-22 22:37:56,335 INFO sqlalchemy.engine.Engine SELECT navigationcard.id AS navigationcard_id, navigationcard.category_id AS navigationcard_category_id, navigationcard.title AS navigationcard_title, navigationcard.subtitle AS navigationcard_subtitle, navigationcard.description AS navigationcard_description, navigationcard.icon AS navigationcard_icon, navigationcard.icon_bg_class AS navigationcard_icon_bg_class, navigationcard.icon_color_class AS navigationcard_icon_color_class, navigationcard.href AS navigationcard_href, navigationcard."order" AS navigationcard_order, navigationcard.created_at AS navigationcard_created_at, navigationcard.updated_at AS navigationcard_updated_at 
+FROM navigationcard 
+WHERE ? = navigationcard.category_id
+2025-11-22 22:37:56,336 INFO sqlalchemy.engine.Engine [cached since 125.8s ago] (8,)
+2025-11-22 22:37:56,338 INFO sqlalchemy.engine.Engine SELECT navigationcard.id AS navigationcard_id, navigationcard.category_id AS navigationcard_category_id, navigationcard.title AS navigationcard_title, navigationcard.subtitle AS navigationcard_subtitle, navigationcard.description AS navigationcard_description, navigationcard.icon AS navigationcard_icon, navigationcard.icon_bg_class AS navigationcard_icon_bg_class, navigationcard.icon_color_class AS navigationcard_icon_color_class, navigationcard.href AS navigationcard_href, navigationcard."order" AS navigationcard_order, navigationcard.created_at AS navigationcard_created_at, navigationcard.updated_at AS navigationcard_updated_at 
+FROM navigationcard 
+WHERE ? = navigationcard.category_id
+2025-11-22 22:37:56,338 INFO sqlalchemy.engine.Engine [cached since 125.8s ago] (9,)
+2025-11-22 22:37:56,339 INFO sqlalchemy.engine.Engine SELECT navigationcard.id AS navigationcard_id, navigationcard.category_id AS navigationcard_category_id, navigationcard.title AS navigationcard_title, navigationcard.subtitle AS navigationcard_subtitle, navigationcard.description AS navigationcard_description, navigationcard.icon AS navigationcard_icon, navigationcard.icon_bg_class AS navigationcard_icon_bg_class, navigationcard.icon_color_class AS navigationcard_icon_color_class, navigationcard.href AS navigationcard_href, navigationcard."order" AS navigationcard_order, navigationcard.created_at AS navigationcard_created_at, navigationcard.updated_at AS navigationcard_updated_at 
+FROM navigationcard 
+WHERE ? = navigationcard.category_id
+2025-11-22 22:37:56,340 INFO sqlalchemy.engine.Engine [cached since 125.8s ago] (10,)
+2025-11-22 22:37:56,341 INFO sqlalchemy.engine.Engine SELECT navigationcard.id AS navigationcard_id, navigationcard.category_id AS navigationcard_category_id, navigationcard.title AS navigationcard_title, navigationcard.subtitle AS navigationcard_subtitle, navigationcard.description AS navigationcard_description, navigationcard.icon AS navigationcard_icon, navigationcard.icon_bg_class AS navigationcard_icon_bg_class, navigationcard.icon_color_class AS navigationcard_icon_color_class, navigationcard.href AS navigationcard_href, navigationcard."order" AS navigationcard_order, navigationcard.created_at AS navigationcard_created_at, navigationcard.updated_at AS navigationcard_updated_at 
+FROM navigationcard 
+WHERE ? = navigationcard.category_id
+2025-11-22 22:37:56,341 INFO sqlalchemy.engine.Engine [cached since 125.8s ago] (11,)
+INFO:     127.0.0.1:59346 - "GET /api/navigation HTTP/1.1" 200 OK
+2025-11-22 22:37:56,344 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [87724]
